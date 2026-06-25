@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.4.6
+Date: 2026-06-25
+  Changes:
+    - Updated for Factorio 2.1
+  Compatibility:
+    - Migrated off the removed LuaFluidBox indexing API. Fluid box access now uses the
+      entity fluid accessors (fluids_count, get_fluid, get_fluid_box_pipe_connections,
+      get_fluid_segment_id, get_fluid_segment_fluid).
+    - Replaced the flib migration module (dropped in flib 2.1) with an inline version
+      migration helper.
+---------------------------------------------------------------------------------------------------
 Version: 2.4.5
 Date: ????
   Changes:

@@ -6,7 +6,6 @@ local renderer = require("scripts.renderer")
 --- @field shape LuaRenderObject?
 --- @field mapshape LuaRenderObject?
 --- @field entity LuaEntity
---- @field fluidbox LuaFluidBox
 --- @field unit_number UnitNumber
 
 --- @class PipeConnectionExt: PipeConnection
@@ -59,18 +58,17 @@ function entity_data.create(iterator, entity)
     connection_objects = {},
     connections = {},
     entity = entity,
-    fluidbox = entity.fluidbox,
     unit_number = unit_number,
   }
 
-  for i = 1, #data.fluidbox do
+  for i = 1, entity.fluids_count do
     --- @cast i uint
-    local id = data.fluidbox.get_fluid_segment_id(i)
+    local id = entity.get_fluid_segment_id(i)
     if not id then
       goto continue
     end
     --- @type PipeConnectionExt
-    local connections = data.fluidbox.get_pipe_connections(i)
+    local connections = entity.get_fluid_box_pipe_connections(i)
     for _, connection in pairs(connections) do
       connection.direction = get_cardinal_direction(connection)
       connection.shape_position = {

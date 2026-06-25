@@ -99,10 +99,9 @@ local function request(entity, player_index, in_overlay, from_hover)
 
   from_hover = from_hover or false
 
-  local fluidbox = entity.fluidbox
   local should_iterate = false
-  for fluidbox_index = 1, #fluidbox do
-    local fluid_segment_id = fluidbox.get_fluid_segment_id(fluidbox_index) or "none"
+  for fluidbox_index = 1, entity.fluids_count do
+    local fluid_segment_id = entity.get_fluid_segment_id(fluidbox_index) or "none"
     local system = self.systems[fluid_segment_id]
     if (not fluid_segment_id == "none") and system and not in_overlay then
       goto continue
@@ -120,13 +119,13 @@ local function request(entity, player_index, in_overlay, from_hover)
         end
       else
         if (not fluid_segment_id == "none") then
-          local contents = fluidbox.get_fluid_segment_contents(fluidbox_index)
-          if contents and next(contents) then
-            color = storage.fluid_colors[next(contents)]
-            order = storage.fluid_order[next(contents)]
+          local segment_fluid = entity.get_fluid_segment_fluid(fluidbox_index)
+          if segment_fluid and segment_fluid.name then
+            color = storage.fluid_colors[segment_fluid.name]
+            order = storage.fluid_order[segment_fluid.name]
           end
         else
-          local contents = fluidbox[fluidbox_index]
+          local contents = entity.get_fluid(fluidbox_index)
           if contents and contents.name then
             color = storage.fluid_colors[contents.name]
             order = storage.fluid_order[contents.name]
@@ -313,10 +312,9 @@ local function request_or_clear(entity, player_index)
   if request(entity, player_index, false) then
     return
   end
-  local fluidbox = entity.fluidbox
-  for fluidbox_index = 1, #fluidbox do
+  for fluidbox_index = 1, entity.fluids_count do
     --- @cast fluidbox_index uint
-    local id = fluidbox.get_fluid_segment_id(fluidbox_index) or "none"
+    local id = entity.get_fluid_segment_id(fluidbox_index) or "none"
     if id and it.systems[id] then
       clear_system(it, id)
     end
